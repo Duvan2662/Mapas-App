@@ -89,11 +89,16 @@ export class MarkersPageComponent {
       color:color,
       marker: marker
     });
+
+    marker.on('dragend',()=>{
+      this.saveToLocalStorage()
+    })
   }
 
   public deleteMartek = (index:number)  => {
     this.markers[index].marker.remove();
     this.markers.splice(index,1);
+    this.saveToLocalStorage()
   }
 
   public flyTo = (marker:Marker) => {
