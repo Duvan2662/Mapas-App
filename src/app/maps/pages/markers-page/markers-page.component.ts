@@ -6,6 +6,11 @@ interface MarkerAndColor {
   marker:Marker;
 }
 
+interface plainMarker {
+  color:string;
+  lngLat:number[];
+}
+
 @Component({
   selector: 'app-markers-page',
   templateUrl: './markers-page.component.html',
@@ -40,12 +45,7 @@ export class MarkersPageComponent {
       zoom: 13, // starting zoom
     });
 
-
-
-
-
-
-
+    this.readFromLocalStorage();
 
     // const markerHtml = document.createElement('div');
     // markerHtml.innerHTML = `Duvan Riaño`
@@ -68,7 +68,8 @@ export class MarkersPageComponent {
     const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16));//Creacion de un exadecimal
     const lngLat = this.map.getCenter();
 
-    this.addMarker(lngLat,color)
+    this.addMarker(lngLat,color);
+    this.saveToLocalStorage();
   }
 
 
@@ -94,14 +95,37 @@ export class MarkersPageComponent {
     this.markers[index].marker.remove();
     this.markers.splice(index,1);
   }
+
   public flyTo = (marker:Marker) => {
     this.map?.flyTo({
       zoom:14,
       center:marker.getLngLat()
     });
-
   }
 
+  public saveToLocalStorage = () =>  {
+    const plainMarkers:plainMarker[] =  this.markers.map(({color,marker})=>{
+      return{
+        color: color,
+        lngLat: marker.getLngLat().toArray()
+      }
+    });
+    // console.log(plainMarkers);
+    localStorage.setItem('plainMarkers', JSON.stringify(plainMarkers));
+  }
+
+
+
+  public readFromLocalStorage = () =>  {
+    const plainMarkersString = localStorage.getItem('plainMarkers') ?? '[]';
+    const plainMarkers: plainMarker[] = JSON.parse(plainMarkersString); //!OJO
+
+    plainMarkers.forEach(({color,lngLat}) => {
+      const [lng,lat] = lngLat
+      const cordenadas = new LngLat(lng,lat)
+      this.addMarker(cordenadas,color)
+    })
+  }
 
 
 }
