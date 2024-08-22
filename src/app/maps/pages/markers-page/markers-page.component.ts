@@ -52,5 +52,31 @@ export class MarkersPageComponent {
   }
 
 
+  public createMarker() {
+
+    if (!this.map) {
+      return
+    }
+    const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16));//Creacion de un exadecimal
+    const lngLat = this.map.getCenter();
+
+    this.addMarker(lngLat,color)
+  }
+
+
+  public addMarker = (lngLat:LngLat, color:string):void  => {
+    if (!this.map) {
+      return
+    }
+
+    const marker = new Marker({
+      color:color,
+      draggable:true
+    })
+    .setLngLat(lngLat)
+    .addTo(this.map)
+  }
+
+
 
 }
