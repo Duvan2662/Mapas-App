@@ -18,7 +18,7 @@
         <div *ngFor="let house of houses" class="col-4 mb-2">
 
           <div class="card">
-            
+
             <maps-mini-map
             [lngLat]="house.lngLat"
             ></maps-mini-map>
@@ -29,6 +29,11 @@
             </div>
           </div>
 
+        </div>
+
+        <div class="col-4 mb-2">
+          Alone COMPONENT
+          <counter-alone></counter-alone>
         </div>
 
 
